@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
+cdk.out/
+.env
+*.egg-info/

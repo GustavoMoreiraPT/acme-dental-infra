@@ -1,0 +1,10 @@
+{
+  "app": "python app.py",
+  "context": {
+    "domain_name": "acmeclinic.pauaua.com",
+    "github_org": "GustavoMoreiraPT",
+    "backend_repo": "acme-dental-clinic",
+    "frontend_repo": "acme-dental-ui",
+    "infra_repo": "acme-dental-infra"
+  }
+}
