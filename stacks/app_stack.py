@@ -16,12 +16,10 @@ from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_ecr as ecr
 from aws_cdk import aws_ecs as ecs
 from aws_cdk import aws_ecs_patterns as ecs_patterns
-from aws_cdk import aws_elasticloadbalancingv2 as elbv2
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_route53 as route53
 from aws_cdk import aws_route53_targets as targets
 from aws_cdk import aws_s3 as s3
-from aws_cdk import aws_ssm as ssm
 from constructs import Construct
 
 
@@ -55,13 +53,13 @@ class AppStack(Stack):
             ],
         )
 
-        # ── ECR Repository ──────────────────────────────────────────
-        self.ecr_repo = ecr.Repository(
+        # ── ECR Repository (created outside CDK to avoid chicken-and-egg
+        #    on first deploy — ECS needs an image before the service
+        #    can stabilise, but the repo must exist to push the image) ─
+        self.ecr_repo = ecr.Repository.from_repository_name(
             self,
             "BackendRepo",
             repository_name="acme-dental-backend",
-            removal_policy=RemovalPolicy.DESTROY,
-            empty_on_delete=True,
         )
 
         # ── ECS Cluster ─────────────────────────────────────────────
@@ -123,7 +121,7 @@ class AppStack(Stack):
             "FargateService",
             cluster=cluster,
             task_definition=task_def,
-            desired_count=0,  # Start at 0 for initial deploy (no image in ECR yet)
+            desired_count=1,
             assign_public_ip=True,  # public subnet, no NAT needed
             listener_port=80,
             public_load_balancer=True,
