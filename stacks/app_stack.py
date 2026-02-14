@@ -123,7 +123,7 @@ class AppStack(Stack):
             "FargateService",
             cluster=cluster,
             task_definition=task_def,
-            desired_count=1,
+            desired_count=0,  # Start at 0 for initial deploy (no image in ECR yet)
             assign_public_ip=True,  # public subnet, no NAT needed
             listener_port=80,
             public_load_balancer=True,

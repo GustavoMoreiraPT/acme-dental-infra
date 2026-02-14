@@ -5,7 +5,7 @@ hosted zone must be manually added to Namecheap so that Route 53
 owns DNS for the subdomain.
 """
 
-from aws_cdk import CfnOutput, Stack
+from aws_cdk import CfnOutput, Fn, Stack
 from aws_cdk import aws_certificatemanager as acm
 from aws_cdk import aws_route53 as route53
 from constructs import Construct
@@ -53,7 +53,7 @@ class DnsStack(Stack):
         CfnOutput(
             self,
             "NameServers",
-            value=", ".join(self.hosted_zone.hosted_zone_name_servers or []),
+            value=Fn.join(", ", self.hosted_zone.hosted_zone_name_servers or []),
             description="Add these NS records to Namecheap for subdomain delegation",
         )
         CfnOutput(

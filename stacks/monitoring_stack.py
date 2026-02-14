@@ -6,7 +6,7 @@ Creates:
   - A CloudWatch Dashboard for operational visibility
 """
 
-from aws_cdk import Duration, Stack
+from aws_cdk import Duration, RemovalPolicy, Stack
 from aws_cdk import aws_cloudwatch as cloudwatch
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_s3 as s3
@@ -62,9 +62,7 @@ class MonitoringStack(Stack):
             "CanaryArtifacts",
             bucket_name=f"acme-dental-canary-{self.account}",
             auto_delete_objects=True,
-            removal_policy=Stack.of(self).removal_policy
-            if hasattr(Stack.of(self), "removal_policy")
-            else None,
+            removal_policy=Stack.of(self).removal_policy if hasattr(Stack.of(self), "removal_policy") and Stack.of(self).removal_policy else RemovalPolicy.DESTROY,
         )
 
         # ── Synthetics Canary ───────────────────────────────────────
